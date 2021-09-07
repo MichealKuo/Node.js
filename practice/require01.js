@@ -1,6 +1,7 @@
 //const {f1,f3} = require('./arrow-func'); 主要匯入手法
 const {f1,f3} = require('./arrow-func');
 const f2 = require(__dirname + '/arrow-func');
+// const f2 = require('./arrow-func');
 
 // console.log('2:', __dirname );
 console.log(f1(9));

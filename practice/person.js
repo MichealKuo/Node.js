@@ -10,9 +10,9 @@ class Person {
         }
     }
     toString(){
-        return  JSON.stringify(this.toJSON(),null,50);
+        return  JSON.stringify(this.toJSON(),null,4);
         // return  JSON.stringify(this.toJSON());
-        //null那空位是內容取代  2是縮排的格式 
+        //null那空位是內容取代   
     }
 }
 
