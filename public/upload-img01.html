@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
 </head>
 <body>
@@ -31,9 +31,18 @@
 <script>
     const avatar = document.querySelector('#avatar');
 
-
+    avatar.addEventListener('change', async event=>{
+        const fd = new FormData(document.form1);
+        const res = await fetch('/try-upload3', {
+            method: 'POST',
+            body: fd
+        });
+        const obj = await res.json();
+        document.querySelector('#img01').src = '/img/' + obj.filename;
+        document.fake_form.my_img.value = obj.filename;
+    });
 
 </script>
-
 </body>
 </html>
+

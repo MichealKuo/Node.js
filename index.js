@@ -5,6 +5,8 @@ const multer = require('multer');
 const fs = require('fs').promises;
 
 const upload = multer({dest: __dirname + '/tmp_uploads/'});
+
+
 const uploadImg = require('./modules/upload-images');
 
 const app = express();
@@ -84,6 +86,21 @@ app.post('/try-upload',upload.single('avatar'),async(req,res)=>{
     } else {
         res.json({success:false, error: '格式不對'});
     }
+
+    
+
+});
+
+app.post('/try-upload2',uploadImg.single('avatar'),async(req,res)=>{
+   
+    res.json(req.file);
+
+    
+});
+//多個上傳時候要記得 files
+app.post('/try-upload3',uploadImg.array('photo', 10),async(req,res)=>{
+   
+    res.json(req.files);
 
     
 });

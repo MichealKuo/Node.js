@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb)=>{
     cb(null, !!extMap[file.mimetype]);
-};
+   // !!extMap 布林！！     
+}; 
 
 module.exports = multer({storage, fileFilter});
