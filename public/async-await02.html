@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    function  myPromise(p) {
+        return new Promise((resolve, reject) => {
+            const rnd = 300 + Math.floor(Math.random()*1000);
+            setTimeout(() => {
+            resolve({p,rnd});
+            }, rnd);
+        });
+    }
+    
+    (async ()=> {
+        //async 使用await時候 他會依照順序執行  
+
+         const str = 'say-hello---';
+         const ar = str.split('');
+
+         for(let i = 0; i< str.length; i++){
+             console.log(await myPromise(str[i]));
+         }
+
+        
+       
+    })();
+
+
+    //直接把整個 箭頭函式 包起來
+    
+
+
+    (async ()=> {
+        //async 使用await時候 他會依照順序執行  
+         const r1 = await myPromise('bill') ;
+         console.log(r1);  
+         const r2 = await myPromise('peter') ;
+         console.log(r2);  
+         const r3 = await myPromise('mary') ;
+         console.log(r3);  
+         const r4 = await myPromise('micheal') ;
+         console.log(r4);  
+    })();
+    
+    //兩個 箭頭 同時交錯跑出來
+   
+   
+
+
+
+</script>
+
+</body>
+</html>

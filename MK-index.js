@@ -4,8 +4,6 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs').promises;
 const upload = multer({dest: 'tmp_uploads/'});
-const uploadImg = require('./modules/upload-images')
-
 
 const app = express();
 
@@ -65,14 +63,6 @@ app.post('/try-upload', upload.single('avatar'), async (req, res)=>{
         await fs.unlink(req.file.path);  // 刪除暫存檔
         res.json({success: false, error: '格式不對'});
     }
-});
-
-app.post('/try-upload2', uploadImg.single('avatar'), async (req, res)=>{
-    res.json(req.file);
-});
-
-app.post('/try-upload3', uploadImg.single('avatar'), async (req, res)=>{
-    res.json(req.files);
 });
 
 // *** 路由定義結束 :END
