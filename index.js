@@ -8,7 +8,7 @@ const upload = multer({dest: __dirname + '/tmp_uploads/'});
 const moment = require('moment-timezone');
 
 const uploadImg = require('./modules/upload-images');
-
+const db = require('./modules/connect-mysql');
 const app = express();
 //建立  app  把  express 當作func 使用
 
@@ -165,7 +165,13 @@ app.get('/try-moment', (req, res)=>{
         m3: moment().tz('Asia/Tokyo').format(fm),
     });
 });
-       
+
+app.get('/try-db', async (req, res)=>{
+    const [r] = await db.query("SELECT * FROM address_book WHERE `name` LIKE ?", ['%李%']);
+
+    res.json(r);
+
+});
 
 
 
