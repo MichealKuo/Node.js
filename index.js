@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs').promises;
-
+const session = require('express-session')
 const upload = multer({dest: __dirname + '/tmp_uploads/'});
-
+const moment = require('moment-timezone');
 
 const uploadImg = require('./modules/upload-images');
 
@@ -15,8 +15,19 @@ const app = express();
 //app.set('key','value');設定樣板引擎
 app.set('view engine','ejs');
 
+
+
 //app.use top-level line 52
 // use 是不管什麼方式取得都可以 相較get 和 post
+
+app.use(session({
+    saveUninitialized: false, 
+    resave: false, //沒變更內容是否強制回存
+    secret:'qaxzvregjhhjklj4lk56123kl;45dfg231', //加密字串
+    cookie:{
+        maxAge: 1200000,  //20分鐘 單位毫秒
+    }
+}));
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -28,15 +39,21 @@ app.use('/jquery',express.static('/Users/micheal/Documents/mfee19-node/node_modu
 
 app.use('/bootstrap',express.static('/Users/micheal/Documents/mfee19-node/node_modules/bootstrap/dist'));
 
-
+app.use((req,res,next)=>{
+    // res.send('middleware')
+    res.locals.title = 'Micheal的網站';
+     next();
+    //需要next 他才會往下跑
+})
 
 
 //建立的靜態資料夾
 
 // ***路由定義開始: BEGIN
 app.get('/', (req,res)=> {
-    
     //ejs 面板
+
+    res.locals.title= '首頁-'+res.locals.title;
     res.render('home', {name: 'Micheal'})
     //res.send(`<h2>Hello</h2>`)
 });
@@ -104,6 +121,51 @@ app.post('/try-upload3',uploadImg.array('photo', 10),async(req,res)=>{
 
     
 });
+
+//get( 路徑 )   路徑裡面 action & id 是代稱
+app.get('/my-params1/:action?/:id(\\d+)?', (req, res)=>{
+    res.json(req.params);
+});
+
+
+
+app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res)=>{
+    let u = req.url.split('?')[0];
+    u = u.slice(3);
+    u = u.split('-').join('');
+
+    res.json({
+        url: req.url,
+        mobile: u
+    });
+});
+
+app.use(require('./routes/admin2'));
+
+app.use('/admin3', require('./routes/admin3'));
+
+//session
+
+app.get('/try-sess', (req, res)=>{
+
+    //name: 'mySessionId',
+    req.session.myVar = req.session.myVar || 0; //沒有設定的話就是以 ０
+    req.session.myVar++;
+
+    res.json(req.session);
+});
+app.get('/try-moment', (req, res)=>{
+
+    const fm = 'YYYY-MM-DD hh:mm:ss';
+
+   
+    res.json({
+        m1: moment().format(fm),
+        m2: moment().tz('Europe/Berlin').format(fm),
+        m3: moment().tz('Asia/Tokyo').format(fm),
+    });
+});
+       
 
 
 
