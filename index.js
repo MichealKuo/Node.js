@@ -6,9 +6,10 @@ const fs = require('fs').promises;
 const session = require('express-session')
 const upload = multer({dest: __dirname + '/tmp_uploads/'});
 const moment = require('moment-timezone');
-
+const MysqlStore = require('express-mysql-session')(session);
 const uploadImg = require('./modules/upload-images');
 const db = require('./modules/connect-mysql');
+const sessionStore = new MysqlStore({}, db);
 const app = express();
 //建立  app  把  express 當作func 使用
 
@@ -24,6 +25,7 @@ app.use(session({
     saveUninitialized: false, 
     resave: false, //沒變更內容是否強制回存
     secret:'qaxzvregjhhjklj4lk56123kl;45dfg231', //加密字串
+    store:sessionStore,
     cookie:{
         maxAge: 1200000,  //20分鐘 單位毫秒
     }
@@ -143,6 +145,10 @@ app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res)=>{
 app.use(require('./routes/admin2'));
 
 app.use('/admin3', require('./routes/admin3'));
+
+app.use('/address-book', require('./routes/address-book'));
+
+
 
 //session
 
