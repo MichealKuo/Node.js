@@ -128,7 +128,7 @@ app.get('/my-params1/:action?/:id(\\d+)?', (req, res)=>{
 });
 
 
-
+//  \倒斜線跳脫字元   d{2} 數字２位   $ 結尾
 app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res)=>{
     let u = req.url.split('?')[0];
     u = u.slice(3);
@@ -167,7 +167,7 @@ app.get('/try-moment', (req, res)=>{
 });
 
 app.get('/try-db', async (req, res)=>{
-    const [r] = await db.query("SELECT * FROM address_book WHERE `name` LIKE ?", ['%李%']);
+    const [r] = await db.query("SELECT * FROM address_book WHERE `name` LIKE ?", ['%李%']);  //like 後面有一個 ?  就需要一個[]去接
 
     res.json(r);
 
