@@ -44,7 +44,7 @@ app.use('/bootstrap',express.static('/Users/micheal/Documents/mfee19-node/node_m
 app.use((req,res,next)=>{
     // res.send('middleware')
     res.locals.title = 'Micheal的網站';
-    
+    res.locals.pageName = '';
     //設定 template 的 helper func
     res.locals.dateToDateString = d => moment(d).format('YYYY-MM-DD')
     res.locals.dateToDateTimeString = d => moment(d).format('YYYY-MM-DD HH:mm:ss')
@@ -170,6 +170,7 @@ app.get('/try-sess', (req, res)=>{
 
     res.json(req.session);
 });
+
 app.get('/try-moment', (req, res)=>{
 
     const fm = 'YYYY-MM-DD hh:mm:ss';
