@@ -45,6 +45,8 @@ app.use((req,res,next)=>{
     // res.send('middleware')
     res.locals.title = 'Micheal的網站';
     res.locals.pageName = '';
+    res.locals.keyword = '';
+
     //設定 template 的 helper func
     res.locals.dateToDateString = d => moment(d).format('YYYY-MM-DD')
     res.locals.dateToDateTimeString = d => moment(d).format('YYYY-MM-DD HH:mm:ss')
