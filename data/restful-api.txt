@@ -31,3 +31,35 @@ RESTful API 作法：
     刪除:
         DELETE /product/:id
 
+-------------------------以 address -book 為例說明
+
+/api/address-book 
+ 
+ GET:   取得列表資料
+ POST:  新增資料
+
+ /api/address-book/:sid
+
+ GET:   取得單項資料
+ PUT:   修改單向資料function checkForm(){
+        // TODO: 欄位檢查
+
+        const fd = new FormData(document.form1);
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(fd).toString(),
+        }).then(r=>r.json()).then(obj=>{
+            console.log(JSON.stringify(obj, null, 4));
+            if(obj.success){
+                alert('資料修改成功');
+            } else {
+                alert(obj.error || '資料修改失敗');
+            }
+        });
+
+    }
+ DELETE:刪除單向資料
