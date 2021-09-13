@@ -1,0 +1,33 @@
+
+
+傳統的作法
+    列表:
+    /products?page=12
+    /products/list/12
+
+    新增:
+    /products/add
+    /products/create
+
+    修改:
+    /products/17/edit
+    /products/17/update
+    /products/edit/17
+    /products/update/17
+
+RESTful API 作法：
+    列表:
+        GET /product
+
+    讀取單筆:
+        GET /product/:id
+
+    新增:
+        POST /product
+
+    修改:
+        PUT /product/:id
+
+    刪除:
+        DELETE /product/:id
+
