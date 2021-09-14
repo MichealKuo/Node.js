@@ -5,8 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" href="http://localhost:3001/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:3001/fontawesome/css/all.css">
     <title>Document</title>
 </head>
 <body>
@@ -114,8 +114,8 @@
 </div>
 
 
-<script src="/jquery/jquery.min.js"></script>
-<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://localhost:3001/jquery/jquery.min.js"></script>
+<script src="http://localhost:3001/bootstrap/js/bootstrap.min.js"></script>
 <script>
 
     const pagiTpl = o => {
@@ -173,7 +173,7 @@
             usp.set('keyword', opt.keyword);
         }
 
-        fetch('/address-book/api/list?' + usp.toString())
+        fetch('http://localhost:3001/address-book/api/list?' + usp.toString())
             .then(r=>r.json())
             .then(data=>{
                 console.log(data);

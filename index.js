@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs').promises;
+const cors = require('cors')
 const session = require('express-session')
 const upload = multer({dest: __dirname + '/tmp_uploads/'});
 const moment = require('moment-timezone');
@@ -30,6 +31,15 @@ app.use(session({
         maxAge: 1200000,  //20分鐘 單位毫秒
     }
 }));
+const corsOptions = {
+    credentials: true,
+    origin: (origin, cb)=>{
+        console.log(`origin: ${origin}`);
+        cb(null, true);
+    }
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());

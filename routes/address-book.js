@@ -100,6 +100,7 @@ router.route('/add')
         //     req.body.address,
         // ]);
 
+        //對照欄位 但不用對照順序
         const input = {...req.body, created_at: new Date()};
         const sql = "INSERT INTO `address_book` SET ?";
         let result = {};
@@ -146,7 +147,7 @@ router.route('/edit/:sid')
     .post(async (req, res)=>{
         // TODO: 欄位檢查
         const output = {
-            success: false,
+            success: true,
             postData: req.body,
         }
 
