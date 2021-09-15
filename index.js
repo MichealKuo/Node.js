@@ -12,6 +12,8 @@ const uploadImg = require('./modules/upload-images');
 const db = require('./modules/connect-mysql');
 const sessionStore = new MysqlStore({}, db);
 const app = express();
+
+const jwt = require('jsonwebtoken');
 //建立  app  把  express 當作func 使用
 
 //app.set('key','value');設定樣板引擎
@@ -51,21 +53,37 @@ app.use('/jquery',express.static('/Users/micheal/Documents/mfee19-node/node_modu
 
 app.use('/bootstrap',express.static('/Users/micheal/Documents/mfee19-node/node_modules/bootstrap/dist'));
 
-app.use((req,res,next)=>{
-    // res.send('middleware')
+// 自訂的 middleware
+app.use(async (req, res, next)=>{
     res.locals.title = 'Micheal的網站';
     res.locals.pageName = '';
     res.locals.keyword = '';
 
-    //設定 template 的 helper func
-    res.locals.dateToDateString = d => moment(d).format('YYYY-MM-DD')
-    res.locals.dateToDateTimeString = d => moment(d).format('YYYY-MM-DD HH:mm:ss')
+    // 設定 template 的 helper functions
+    res.locals.dateToDateString = d => moment(d).format('YYYY-MM-DD');
+    res.locals.dateToDateTimeString = d => moment(d).format('YYYY-MM-DD HH:mm:ss');
 
-    res.locals.session= req.session; //把 session的資料傳到 ejs 呈現登入的狀態
+    res.locals.session = req.session; // 把 session 的資料傳到 ejs
 
-     next();
-    //需要next 他才會往下跑
-})
+
+    // jwt 驗證
+    req.myAuth = null;  // 自訂的屬性 myAuth
+    const auth = req.get('Authorization');
+    if(auth && auth.indexOf('Bearer ')===0){
+        const token = auth.slice(7);
+        try{
+            req.myAuth = await jwt.verify(token, process.env.JWT_SECRET);
+            console.log('req.myAuth:', req.myAuth);
+        } catch(ex) {
+            console.log('jwt-ex:', ex);
+        }
+    }
+    //需要next 才能往下跑
+    next();
+});
+
+
+
 
 
 //建立的靜態資料夾

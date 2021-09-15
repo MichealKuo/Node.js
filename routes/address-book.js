@@ -50,6 +50,8 @@ async function getListData(req, res){
     return output;
 }
 
+router.getListData = getListData; // 將 function 掛在 router 物件上做匯出
+
 router.get('/', (req, res)=>{
     res.render('address-book/main');
 });
@@ -78,7 +80,6 @@ router.delete('/delete/:sid([0-9]+)', async (req, res)=>{
     res.json(r);
 });
 
-//add 的路徑
 router.route('/add')
     .get(async (req, res)=>{
         res.locals.pageName = 'ab-add';
@@ -101,7 +102,6 @@ router.route('/add')
         //     req.body.address,
         // ]);
 
-        //對照欄位 但不用對照順序
         const input = {...req.body, created_at: new Date()};
         const sql = "INSERT INTO `address_book` SET ?";
         let result = {};
@@ -133,15 +133,14 @@ router.route('/add')
         res.json(output);
     });
 
-//edit 的路徑
+
 router.route('/edit/:sid')
-//.get 修改表單的呈現
     .get(async (req, res)=>{
         const sql = "SELECT * FROM address_book WHERE sid=?";
         const [rs] = await db.query(sql, [req.params.sid]);
 
         if(rs.length){
-            res.render('address-book/edit', {row: rs[0]});// {row: rs[0]}) 多一層＋變數
+            res.render('address-book/edit', {row: rs[0]});
         } else {
             res.redirect('/address-book/list');
         }
@@ -149,7 +148,7 @@ router.route('/edit/:sid')
     .post(async (req, res)=>{
         // TODO: 欄位檢查
         const output = {
-            success: true,
+            success: false,
             postData: req.body,
         }
 
