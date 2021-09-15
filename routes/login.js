@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const db = require('./../modules/connect-mysql');
 const upload = require('./../modules/upload-images');
@@ -11,22 +12,19 @@ router.get('/login', (req, res)=>{
     res.locals.pageName = 'login';
     res.render('login');
 });
-router.post('/login', async(req, res)=>{
+router.post('/login', async (req, res)=>{
 
-    //TODO: 欄位檢查
+    // TODO: 欄位檢查
 
-    const [rs] = await db.query("SELECT * FROM members WHERE `email`=?", [req.body.email]);//搜尋時候可以不用toLowerCase()
+    const [rs] = await db.query("SELECT * FROM members WHERE `email`=?", [req.body.email]);
 
     if(!rs.length){
+        // 帳號錯誤
         return res.json({success: false});
-
     }
 
-
-    const success = await bcrypt.compare(req.body.password, rs[0].password);    
-
+    const success = await bcrypt.compare(req.body.password, rs[0].password);
     if(success){
-        //選擇id, email, nickname
         const {id, email, nickname} = rs[0];
         req.session.member = {id, email, nickname};
     }
@@ -75,24 +73,43 @@ router.post('/register', async (req, res)=>{
     res.json(output);
 });
 
-
-router.get('/account-check', async(req, res)=>{
-
-    //{used: true}
-    const sql = "SELECT `email` FROM members WHERE `email`=?";
-    const [rs] = await db.query(sql,[req.query.email]);
-    
-    res.json({used: !! rs.length });
-    
-
+router.get('/account-check', async (req, res)=>{
+    const sql = "SELECT 1 FROM members WHERE `email`=?";
+    const [rs] = await db.query(sql, [req.query.email ]);
+    res.json({used: !!rs.length });
 });
-
-
-
 
 // 登出
 router.get('/logout', (req, res)=>{
-    res.json({});
+    delete req.session.member;
+    res.redirect('/');
+});
+
+
+router.post('/login-jwt', async (req, res)=>{
+    const output = {
+        success: false,
+        token: null,
+    };
+    // TODO: 欄位檢查
+
+    const [rs] = await db.query("SELECT * FROM members WHERE `email`=?", [req.body.email]);
+
+    if(!rs.length){
+        // 帳號錯誤
+        return res.json(output);
+    }
+
+    const success = await bcrypt.compare(req.body.password, rs[0].password);
+    if(success){
+        const {id, email, nickname} = rs[0];
+        // req.session.member = {id, email, nickname};
+
+        output.success = true;
+        output.member = {id, email, nickname};
+        output.token = await jwt.sign({id, email, nickname}, process.env.JWT_SECRET);
+    }
+    res.json(output);
 });
 
 module.exports = router;

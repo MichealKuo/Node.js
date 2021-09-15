@@ -61,7 +61,7 @@ app.use((req,res,next)=>{
     res.locals.dateToDateString = d => moment(d).format('YYYY-MM-DD')
     res.locals.dateToDateTimeString = d => moment(d).format('YYYY-MM-DD HH:mm:ss')
 
-
+    res.locals.session= req.session; //把 session的資料傳到 ejs 呈現登入的狀態
 
      next();
     //需要next 他才會往下跑
