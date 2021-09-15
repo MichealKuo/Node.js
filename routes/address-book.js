@@ -78,6 +78,7 @@ router.delete('/delete/:sid([0-9]+)', async (req, res)=>{
     res.json(r);
 });
 
+//add 的路徑
 router.route('/add')
     .get(async (req, res)=>{
         res.locals.pageName = 'ab-add';
@@ -132,14 +133,15 @@ router.route('/add')
         res.json(output);
     });
 
-
+//edit 的路徑
 router.route('/edit/:sid')
+//.get 修改表單的呈現
     .get(async (req, res)=>{
         const sql = "SELECT * FROM address_book WHERE sid=?";
         const [rs] = await db.query(sql, [req.params.sid]);
 
         if(rs.length){
-            res.render('address-book/edit', {row: rs[0]});
+            res.render('address-book/edit', {row: rs[0]});// {row: rs[0]}) 多一層＋變數
         } else {
             res.redirect('/address-book/list');
         }

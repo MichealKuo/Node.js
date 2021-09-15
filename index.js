@@ -165,6 +165,7 @@ app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res)=>{
 });
 
 app.use(require('./routes/admin2'));
+app.use('/', require('./routes/login'));
 
 app.use('/admin3', require('./routes/admin3'));
 
