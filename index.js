@@ -33,6 +33,7 @@ app.use(session({
         maxAge: 1200000,  //20分鐘 單位毫秒
     }
 }));
+//CORS 跨域 network header 會出現
 const corsOptions = {
     credentials: true,
     origin: (origin, cb)=>{
@@ -189,6 +190,8 @@ app.use('/admin3', require('./routes/admin3'));
 
 app.use('/address-book', require('./routes/address-book'));
 
+//api - practice - product for php-data
+app.use('/product', require('./routes/product'));
 
 
 //session
