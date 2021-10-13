@@ -23,6 +23,7 @@ async function getListData(req, res){
     }
 
 
+    
     const t_sql = `SELECT COUNT(1) totalRows FROM address_book ${where}`;
     const [[{totalRows}]] = await db.query(t_sql);
     output.totalRows = totalRows;
