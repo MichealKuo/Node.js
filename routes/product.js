@@ -1,99 +1,65 @@
-const db = require('./../modules/connect-mysql');
+const express = require('express');
+// const db = require('./../modules/connect-mysql');
+const upload = require('./../modules/upload-images');
+const Product = require('./../models/Product');
 
-const tableName = 'products';
-const pkField = 'sid';
+const router = express.Router();
 
-class Product {
+// 列表
+router.get('/', async (req, res) => {
+    res.json(await Product.findAll());
+});
 
-    constructor(defaultObj={}) {
-        // `sid`, `author`, `bookname`, `category_sid`, `book_id`, `publish_date`, `pages`, `price`, `isbn`, `on_sale`, `introduction`
-        this.data = defaultObj;
+// 讀取單筆
+router.get('/:id',async (req, res) => {
+    const output = {
+        success: false,
+        data: null,
+    };
+    output.data = await Product.findOne(req.params.id);
+    if(output.data){
+        output.success = true;
     }
+    res.json(output);
+} );
+// 測試用
+router.get('/test01/2',async (req, res) => {
 
-    /* 讀取所有資料, 要有篩選的功能 */
-    static async findAll(options={}){
-        let op = {
-            perPage: 5,
-            page: 1,
+    const p1 = await Product.findOne(2);
+    p1.data.price *= 2;
 
-            orderBy: '',
+    res.json(await p1.save());
+} );
 
-            category: null,
-            priceLow: 0,
-            priceHigh: 0,
-            keyword: '',
-        };
-        const output = {
-            perPage: op.perPage,
-            page: op.page,
-            totalRows: 0,
-            totalPages: 0,
-            rows: [],
-        };
-        const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName}`;
-        const [t_rs] = await db.query(t_sql);
-        const totalRows = t_rs[0].totalRows;
+// TODO: 管理的功能, 需要登入後才能操作
+// 新增
+router.post('/', async (req, res) => {
+    const p1 = new Product(req.body);
+    res.json(await p1.save());
+});
 
-        if(totalRows>0){
-            output.totalRows = totalRows;
-            output.totalPages = Math.ceil(totalRows/op.perPage);
-            const sql = `SELECT * FROM ${tableName} LIMIT ${(op.page-1) * op.perPage}, ${op.perPage}`;
-            const [rs] = await db.query(sql);
-            output.rows = rs;
-        }
-
-        return output;
+// 修改
+router.put('/:id', async (req, res) => {
+    const output = {
+        success: false,
+        result: null,
+    };
+    const p1 = await Product.findOne(req.params.id);
+    if(p1){
+        output.success = true;
+        output.result = await p1.edit(req.body);
     }
+    res.json(output);
+});
 
-    /* 讀取單筆資料 */
-    static async findOne(pk=0){
-        const sql = `SELECT * FROM ${tableName} WHERE ${pkField}=?`;
-        const [rs] = await db.query(sql, [pk]);
-        if(rs && rs.length===1){
-            // return rs[0];
-            return new Product(rs[0])
-        }
-        return null;
+// 刪除
+router.delete('/:id', async (req, res) => {
+    const p1 = await Product.findOne(req.params.id);
+    if(p1){
+         return res.json(await p1.remove());
     }
-    toJSON(){
-        return this.data;
-    }
-    toString(){
-        return JSON.stringify(this.data, null, 4);
-    }
-    async save(){
-        // 若有 PK 則表示要做修改
-        if(this.data.sid){
-            const sid = this.data.sid;
-            const data = {...this.data};
-            delete data.sid;
-            const sql = `UPDATE ${tableName} SET ? WHERE ${pkField}=?`;
-            const [r] = await db.query(sql, [data, sid]);
-            return r;
-        } else {
-            // 沒有 PK 則表示要做新增
-            const sql = `INSERT INTO ${tableName} SET ?`;
-            const [r] = await db.query(sql, [this.data]);
-            return r;
-        }
-    }
-    async edit(obj={}){
-        for(let i in this.data){
-            if(i===pkField) continue;
-            if(obj[i]){
-                this.data[i] = obj[i];
-            }
-        }
-        return await this.save();
-    }
-
-    async remove(){
-        const sql = `DELETE FROM ${tableName} WHERE ${pkField}=?`;
-        const [r] = await db.query(sql, [this.data.sid]);
-        return r;
-    }
-}
-
-module.exports = Product;
+    res.json({info: 'item not found!'});
+});
 
 
+module.exports = router;

@@ -2,18 +2,17 @@ const db = require('./../modules/connect-mysql');
 
 const tableName = 'products';
 const pkField = 'sid';
+
 class Product {
 
     constructor(defaultObj={}) {
         // `sid`, `author`, `bookname`, `category_sid`, `book_id`, `publish_date`, `pages`, `price`, `isbn`, `on_sale`, `introduction`
         this.data = defaultObj;
     }
-    // 1014 pm04
 
     /* 讀取所有資料, 要有篩選的功能 */
     static async findAll(options={}){
         let op = {
-            //分頁每頁五筆
             perPage: 5,
             page: 1,
 
@@ -33,7 +32,7 @@ class Product {
         };
         const t_sql = `SELECT COUNT(1) totalRows FROM ${tableName}`;
         const [t_rs] = await db.query(t_sql);
-        const totalRows = t_rs[0].totalRows;//
+        const totalRows = t_rs[0].totalRows;
 
         if(totalRows>0){
             output.totalRows = totalRows;
