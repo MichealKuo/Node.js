@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class Person  {
+            constructor(name ,age ){
+                this.name = name ;
+                this.age = age ;
+                Person.num = Person.num || 0;  //如果沒有設定 就給0
+                Person.num ++;
+            }
+            toJSON(){
+                return {
+                    name: this.name,
+                    age: this.age,
+                }
+            }
+            //計算建立了多少個個體
+            static count(){
+                return Person.num;
+            }
+        }
+        const p1 = new Person('bill', 23);
+        console.log(Person.count());
+        const p2 = new Person('Micheal', 32);
+        console.log(Person.count());
+    </script>
+</body>
+</html>

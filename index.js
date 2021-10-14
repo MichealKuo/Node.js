@@ -224,6 +224,23 @@ app.get('/try-db', async (req, res)=>{
 
 });
 
+//新增到 資料庫
+//uploadImg.none 
+app.post('/test_avatar', uploadImg.none(), async (req, res)=>{
+    const sql = "INSERT INTO `test_avatar`(`avatar`, `name`) VALUES (?, ?)";
+    const [r] = await db.query(sql, [req.body.avatar, req.body.name]);
+    res.json(r); 
+});
+app.get('/test_avatar/:id', async (req, res)=>{
+    const sql = "SELECT * FROM `test_avatar` WHERE sid=?";
+    const [r] = await db.query(sql, [req.params.id]);
+    res.json(r[0] ? r[0] : {});
+});
+app.put('/test_avatar/:id', uploadImg.none(), async (req, res)=>{
+    const sql = "UPDATE `test_avatar` SET ? WHERE sid=?";
+    const [r] = await db.query(sql, [req.body, req.params.id]);
+    res.json(r);
+});
 
 
 
