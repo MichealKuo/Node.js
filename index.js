@@ -193,6 +193,7 @@ app.use('/address-book', require('./routes/address-book'));
 //api - practice - product for php-data
 app.use('/product', require('./routes/product'));
 
+app.use('/cart', require('./routes/cart'));
 
 //session
 

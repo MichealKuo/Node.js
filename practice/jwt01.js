@@ -1,21 +1,22 @@
+
 const jwt = require('jsonwebtoken');
 
-const secretKey = 'dqwdqwd';
-
+const secretKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGF2aWQiLCJp';
 
 (async ()=>{
 
-    //encoded
-    const token = jwt.sign({name:'David'},secretKey);
+    // 加密
+    const token = await jwt.sign({name:'david'}, secretKey);
 
     console.log(token);
 
-    const token1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGF2aWQiLCJpYXQiOjE2MzE2ODU0Njd9.K2F4KXKyXqUI8sAWIv_ubLZyQZhX77DXfQCV9t8qjQ4'
-   
-    //decoded
-    const decoded = await jwt.verify(token1, secretKey);
-
-    console.log(decoded);
-    //name: 'David', iat: 1631685467 =>編token的時間點
+    // const token1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiZGF2aWQiLCJpYXQiOjE2MzE2ODU2OTF9.yERGAN-KkDdUdt8PWYYbBhseVTaU_EpMwzymp7TN6uc';
+    //
+    // // 解密
+    // const decoded = await jwt.verify(token1, secretKey);
+    //
+    // console.log(decoded);
 
 })()
+
+
